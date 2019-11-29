@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Form Node</title>
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+   </head>
+   <script src = "https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+   <script>
+    //   socket.on('testerEvent', function(data){document.write(data.description)});
+    
+    $(document).ready(function() {
+         var socket = io.connect();
+         var form = $('#myForm');
+         var name = $('#name');
+         var number = $('#number');
+         var message = $('#message');
+         var tableArea = $('#tableArea');
+         form.submit(function(e) {
+            e.preventDefault();
+            socket.emit('sending message', name.val(),number.val(),message.val());
+            name.val('');
+            number.val(' ');
+            message.val(' ');
+            $("tbody").html("");
+         });
+         socket.on('View Record', function(data){
+             var enquiry = JSON.parse(data.enquiry);
+             $.each(enquiry, function(i,item){
+   // $("tbody").append("<tr><td>" + (i+1) +"</td><td>" + item.name + "</td><td>" + item.number + "</td><td>"+item.message + "</td><td><button type='submit' id='record' onClick='deleteLocalStorage("+i+")'>Delete</button></td></tr>"); 
+   $("tbody").append("<tr><td>" + (i+1) +"</td><td>" + item.name + "</td><td>" + item.number + "</td><td>"+item.message + "</td></tr>"); 
+});
+         });
+      });
+
+   </script>
+   <body>
+    <div class="container">
+        <h1 class="jumbotron">
+           Enquiry
+        </h1>
+        <div class="row" style="margin-top: 70px;">
+           <div class="col-md-2"></div>
+           <div class="col-md-8">
+              <form id="myForm">
+                    <div class="form-group">
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" placeholder="Please Enter your Name" class="form-control required"/>
+                     </div>
+                     <div class="form-group">
+                            <label for="Number">Number:</label>
+                            <input type="text" id="number" placeholder="Please Enter your Number" class="form-control required"/>
+                     </div>
+                 <div class="form-group">
+                        <label for="Message">Message:</label>
+                    <textarea rows="5" id="message" cols="5" placeholder="Please Enter your Message" class="form-control required"></textarea>
+                 </div>
+                 <div class="form-group">
+                    <button type="submit" class="btn btn-success">Send</button>
+                 </div>
+              </form>              
+              <div id="tableArea">
+                    <table class="table table-bordered table-striped">
+                            <thead>
+                              <th>S.No</th>
+                              <th>Name</th>
+                              <th>Number</th>
+                              <th>Message</th>
+                              <!-- <th>Delete</th> -->
+                            </thead>
+                            <tbody>
+                            </tbody>
+                    </table>
+                </div>
+           </div>
+           <div class="col-md-2"></div>
+        </div>
+     </div>
+     <script>
+   //   function deleteLocalStorage(id){
+   //      console.log(id);
+   //    var socket = io.connect();
+   //       socket.on("Delete message", function(id){     
+   //          $("tbody").html("");
+   // });            
+   // socket.emit('Delete Record', function(data){  
+   //          $("tbody").html("");
+   //           alert(data);
+   // });
+   //   }
+     </script>
+   </body>
+</html>
